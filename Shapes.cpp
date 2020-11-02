@@ -3,6 +3,7 @@
 //
 
 #include <list>
+#include <iostream>
 #include "Shapes.h"
 
 
@@ -103,7 +104,7 @@ static void setBoundingBox(int &minX, int &minY, int &maxX, int &maxY, const Vec
 // Returns true if given point is in half space created by the two other vectors. Otherwise, returns false.
 static bool isPointInHalfSpace(const Vector2 &a, const Vector2 &b, const Vector2 &point)
 {
-    return ((point.x - a.x) * (b.y - a.y) - (point.y - a.y) * (b.x - a.x)) >= 0;
+    return ((point.x - a.x) * (b.y - a.y) - (point.y - a.y) * (b.x - a.x)) <= 0;
 }
 
 // Returns true if given point is in this shape. Otherwise, returns false.
@@ -164,13 +165,14 @@ Shape **Shape::getRectanglesFromImage(const Image &img, int &arrSize)
         {
             if (tempImg.getPixel(x, y) != BACKGROUND)
             {
-                auto *newRect = new Rectangle();
-                Rectangle::recognizeRectangle(tempImg, Vector2(x, y), *newRect);
+                Rectangle *newRect;
+                Rectangle::recognizeRectangle(tempImg, Vector2(x, y), &newRect);
                 rectangles.push_front(newRect);
                 Rectangle(*newRect, BACKGROUND).draw(tempImg);
             }
         }
     }
+
 
     arrSize = rectangles.size();
     auto **shapesArray = new Shape *[arrSize];
@@ -202,12 +204,12 @@ Shape **Shape::getRectanglesAndTrianglesFromImage(const Image &img, int &arrSize
         {
             if (tempImg.getPixel(x, y) != BACKGROUND)
             {
-                auto *newRect = new Rectangle();
-                Triangle tempTriangle = Triangle();
-                if (Rectangle::recognizeRectangleWithTriangle(tempImg, Vector2(x, y), *newRect, tempTriangle))
+                Rectangle *newRect;
+                Triangle *newTriangle;
+                if (Rectangle::recognizeRectangleWithTriangle(tempImg, Vector2(x, y), &newRect, &newTriangle))
                 {
                     // Triangle was found.
-                    shapes.push_back(new Triangle(tempTriangle));
+                    shapes.push_back(newTriangle);
                 }
                 shapes.push_front(newRect);
                 Rectangle(*newRect, BACKGROUND).draw(tempImg);
@@ -325,7 +327,7 @@ static int getTriangleHorizontalLength(const Image &img, const Vector2 &leftPoin
  * @param topLeft The top-left pixel of the triangle.
  * @param innerTriangle This will be set to the new Triangle object.
  */
-void Triangle::recognizeTriangle(const Image &img, const Vector2 &topLeft, Triangle &innerTriangle)
+void Triangle::recognizeTriangle(const Image &img, const Vector2 &topLeft, Triangle **innerTriangle)
 {
     unsigned char color = img.getPixel(topLeft);
     Vector2 bottomLeft;
@@ -349,7 +351,7 @@ void Triangle::recognizeTriangle(const Image &img, const Vector2 &topLeft, Trian
         third = bottomLeft;
     }
 
-    innerTriangle = Triangle(first, second, third, color);
+    *innerTriangle = new Triangle(first, second, third, color);
 }
 
 /**
@@ -438,12 +440,12 @@ static void setBottomRightRectangleCorner(const Image &img, const Vector2 &start
  * @param topLeft The top-left pixel of the Rectangle.
  * @param rectangle This will be set to the new Rectangle object.
  */
-void Rectangle::recognizeRectangle(const Image &img, const Vector2 &topLeft, Rectangle &rectangle)
+void Rectangle::recognizeRectangle(const Image &img, const Vector2 &topLeft, Rectangle **rectangle)
 {
     unsigned char color = img.getPixel(topLeft);
     Vector2 bottomRight;
     setBottomRightRectangleCorner(img, topLeft, bottomRight);
-    rectangle = Rectangle(topLeft, bottomRight, color);
+    *rectangle = new Rectangle(topLeft, bottomRight, color);
 }
 
 /**
@@ -459,13 +461,13 @@ void Rectangle::recognizeRectangle(const Image &img, const Vector2 &topLeft, Rec
  * @param innerTriangle This will be set to the new Triangle object (if found in Rectangle).
  * @return true if Triangle was found. Otherwise, returns false.
  */
-bool Rectangle::recognizeRectangleWithTriangle(const Image &img, const Vector2 &topLeft, Rectangle &rectangle,
-                                               Triangle &innerTriangle)
+bool Rectangle::recognizeRectangleWithTriangle(const Image &img, const Vector2 &topLeft, Rectangle **rectangle,
+                                               Triangle **innerTriangle)
 {
     unsigned char color = img.getPixel(topLeft);
     Vector2 bottomRight;
     setBottomRightRectangleCorner(img, topLeft, bottomRight);
-    rectangle = Rectangle(topLeft, bottomRight, color);
+    *rectangle =  new Rectangle(topLeft, bottomRight, color);
 
     for (int y = topLeft.y; y <= bottomRight.y; ++y)
     {

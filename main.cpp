@@ -7,7 +7,7 @@ int main()
 {
     Rectangle rect1 = Rectangle(Vector2(1, 1), Vector2(3, 2), 70);
     Rectangle rect2 = Rectangle(Vector2(3, 4), Vector2(4, 5), 140);
-    Triangle triangle = Triangle(Vector2(1, 1), Vector2(3, 2), Vector2(1, 2), 210);
+    Triangle triangle = Triangle(Vector2(2, 1), Vector2(3, 2), Vector2(1, 2), 210);
     const Shape *shapesOriginal[3] = {&rect1, &rect2, &triangle};
 
     Image img1 = Image(6, 6);

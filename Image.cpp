@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <iomanip>
 #include "Image.h"
 
 
@@ -180,9 +181,9 @@ std::ostream &operator<<(std::ostream &os, const Image &img) noexcept
         unsigned char *row = img._matrix[i];
         for (int j = 0; j < lastColumn; j++)
         {
-            os << (int) row[j] << " ";
+            os << std::setfill('0') << std::setw(3) << (int) row[j] << " ";
         }
-        os << (int) row[lastColumn] << std::endl;
+        os << std::setfill('0') << std::setw(3) << (int) row[lastColumn] << std::endl;
     }
     return os;
 }

@@ -146,13 +146,13 @@ public:
 
     /**
      * Recognizes the Triangle (that is parallel to the x axis) whose top-left corner is the given location
-     * and then sets innerTriangle to this triangle.
+     * and then sets *innerTriangle to this triangle. (dynamic alloc)
      *
      * @param img The image to scan in.
      * @param topLeft The top-left pixel of the triangle.
-     * @param innerTriangle This will be set to the new Triangle object.
+     * @param innerTriangle This de-referenced will be set to the new Triangle object. (dynamic alloc)
      */
-    static void recognizeTriangle(const Image &img, const Vector2 &topLeft, Triangle &innerTriangle);
+    static void recognizeTriangle(const Image &img, const Vector2 &topLeft, Triangle **innerTriangle);
 };
 
 /**
@@ -202,25 +202,25 @@ public:
      *
      * @param img The image to scan in.
      * @param topLeft The top-left pixel of the Rectangle.
-     * @param rectangle This will be set to the new Rectangle object.
+     * @param rectangle This de-referenced will be set to the new Rectangle object. (dynamic alloc)
      */
-    static void recognizeRectangle(const Image &img, const Vector2 &topLeft, Rectangle &rectangle);
+    static void recognizeRectangle(const Image &img, const Vector2 &topLeft, Rectangle **rectangle);
 
     /**
      * Recognizes the Rectangle (that is parallel to the x and y axis) whose top-left corner is the given location
-     * and then sets rectangle to this Rectangle.
+     * and then sets *rectangle to this Rectangle. (dynamic alloc)
      * Also Recognizes the Triangle (that is parallel to the x axis) if one is in the Rectangle
-     * and then sets innerTriangle to this triangle.
+     * and then sets *innerTriangle to this triangle. (dynamic alloc)
      * Returns true if Triangle was found. Otherwise, returns false.
      *
      * @param img The image to scan in.
      * @param topLeft The top-left pixel of the Rectangle.
-     * @param rectangle This will be set to the new Rectangle object.
-     * @param innerTriangle This will be set to the new Triangle object (if found in Rectangle).
+     * @param rectangle This de-referenced will be set to the new Rectangle object. (dynamic alloc)
+     * @param innerTriangle This de-referenced will be set to the new Triangle object, if in Rectangle. (dynamic alloc)
      * @return true if Triangle was found. Otherwise, returns false.
      */
-    static bool recognizeRectangleWithTriangle(const Image &img, const Vector2 &topLeft, Rectangle &rectangle,
-                                               Triangle &innerTriangle);
+    static bool recognizeRectangleWithTriangle(const Image &img, const Vector2 &topLeft, Rectangle **rectangle,
+                                               Triangle **innerTriangle);
 
 };
 
