@@ -29,7 +29,7 @@ int main()
 
     std::cout << "New images:" << std::endl << std::endl;
     std::cout << img1Compare << std::endl << std::endl;
-    std::cout << img2Compare << std::endl << std::endl;
+    std::cout << img2Compare << std::endl;
 
     Shape::freeShapesArray(shapes1, arrSize1);
     Shape::freeShapesArray(shapes2, arrSize2);

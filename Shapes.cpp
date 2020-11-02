@@ -3,7 +3,6 @@
 //
 
 #include <list>
-#include <iostream>
 #include "Shapes.h"
 
 
@@ -346,7 +345,7 @@ void Triangle::recognizeTriangle(const Image &img, const Vector2 &topLeft, Trian
     else
     {
         // Triangle has parallel line on the bottom and single point on the top.
-        first = Vector2(topLeft.x + (bottomLength / 2), topLeft.y); // get middle point (in case of 3+ pixels).
+        first = Vector2(topLeft.x + (topLength / 2), topLeft.y); // get middle point (in case of 3+ pixels).
         second = Vector2(bottomLeft.x + bottomLength, bottomLeft.y);
         third = bottomLeft;
     }
@@ -467,7 +466,7 @@ bool Rectangle::recognizeRectangleWithTriangle(const Image &img, const Vector2 &
     unsigned char color = img.getPixel(topLeft);
     Vector2 bottomRight;
     setBottomRightRectangleCorner(img, topLeft, bottomRight);
-    *rectangle =  new Rectangle(topLeft, bottomRight, color);
+    *rectangle = new Rectangle(topLeft, bottomRight, color);
 
     for (int y = topLeft.y; y <= bottomRight.y; ++y)
     {
